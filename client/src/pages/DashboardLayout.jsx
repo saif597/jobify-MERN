@@ -1,7 +1,13 @@
 import Wrapper from '../assets/wrappers/Dashboard'
 import React, { createContext, useContext, useState } from 'react'
-import { BigSideBar, Navbar, SmallSideBar } from '../components'
-import { Outlet, redirect, useLoaderData, useNavigate } from 'react-router-dom'
+import { BigSideBar, Navbar, SmallSideBar, Loading } from '../components'
+import {
+  Outlet,
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from 'react-router-dom'
 import customFetch from '../utils/customFetch'
 import { toast } from 'react-toastify'
 
@@ -19,7 +25,8 @@ const DashboardContext = createContext()
 const DashboardLayout = ({ isDarkThemeEnabled }) => {
   const { userWithoutPassword: user } = useLoaderData()
   const navigate = useNavigate()
-
+  const navigation = useNavigation()
+  const isPageLoading = navigation.state === 'loading'
   console.log(user)
   const [showSidebar, setShowSidebar] = useState(false)
   const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled)
@@ -55,7 +62,7 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
           <div>
             <Navbar />
             <div className='dashboard-page'>
-              <Outlet context={{ user }} />
+              {isPageLoading ? <Loading /> : <Outlet context={{ user }} />}
             </div>
           </div>
         </main>
